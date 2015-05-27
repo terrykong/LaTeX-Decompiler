@@ -1,4 +1,4 @@
 ax+b = y
 cx+d = y
 
-y = [a b; c d] [x;1];
+:( :( 

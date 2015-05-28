@@ -2,6 +2,11 @@ classdef RectangleList < handle
     %RECTANGLELIST Summary of this class goes here
     %   Detailed explanation goes here
     
+    
+    %% Add a check for inclusion pass when inserting
+    %% Correct the metric
+    %% add a remove
+    
     properties
         head
         tail

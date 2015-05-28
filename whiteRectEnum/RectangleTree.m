@@ -13,8 +13,7 @@ classdef RectangleTree < handle
             obj.root = node;
         end
         
-        function [outputList,newTree] = processPoint(obj,xval,yval,ymin,ymax) % Process a black point at position i,j - right side is increasing j (column)
-            outputList = RectangleList([],[]);
+        function newTree = processPoint(obj,outputList,xval,yval,ymin,ymax) % Process a black point at position i,j - right side is increasing j (column)
             auxTree = obj.exploreDown(outputList,'root',xval,yval);
             
             newTree = RectangleTree(RectangleNode(ymin,xval,ymax));

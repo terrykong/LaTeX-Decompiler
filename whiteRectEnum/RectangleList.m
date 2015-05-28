@@ -2,10 +2,8 @@ classdef RectangleList < handle
     %RECTANGLELIST Summary of this class goes here
     %   Detailed explanation goes here
     
-    
-    %% Add a check for inclusion pass when inserting
+   
     %% Correct the metric
-    %% add a remove
     
     properties
         head
@@ -24,7 +22,35 @@ classdef RectangleList < handle
             end
         end
         
+        function outNode = checkInclusion(obj,node)
+            % out: [] if no inclusion
+            % bigger node if any inclusion is found. node in place is removed.
+            if numel(obj.head) == 0
+                outNode = [];
+                return
+            end
+            if obj.head.includes(node)
+                outNode = obj.head;
+                obj.removeHead();
+                return
+            end
+            if node.includes(obj.head)
+                outNode = node;
+                obj.removeHead();
+                return
+            end
+            if numel(obj.tail) ~= 0
+                outNode = obj.tail.checkInclusion(node);
+            else
+                outNode = [];
+            end
+        end
+        
         function insertDecr(obj,node)
+            newNode = obj.checkInclusion(node);
+            if numel(newNode) > 0
+                node = newNode;
+            end
             if numel(obj.head) == 0
                 obj.head = node;
                 return
@@ -40,6 +66,15 @@ classdef RectangleList < handle
                 obj.tail.insertDecr(node);
             end
         end
+        
+        function removeHead(obj)
+            obj.head = [];
+            if numel(obj.tail) >0
+                obj.head = obj.tail.head;
+                obj.tail = obj.tail.tail;
+            end
+        end
+        
         
         function vals = print(obj)
             if numel(obj.head) == 0

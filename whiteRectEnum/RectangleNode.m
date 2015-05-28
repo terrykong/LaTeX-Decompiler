@@ -22,7 +22,7 @@ classdef RectangleNode < handle
         
         function val = metric(obj)
             if ~obj.active
-                val = (obj.top-obj.bottom+1)*(obj.left-obj.right+1);
+                val = (obj.bottom-obj.top+1)*(obj.left-obj.right+1);
             else
                 val = 0;
             end
@@ -44,6 +44,14 @@ classdef RectangleNode < handle
         function [left,right] = split(obj,yval)
             left = RectangleNode(obj.top,obj.left,yval);
             right = RectangleNode(yval,obj.left,obj.bottom);
+        end
+        
+        function val = includes(obj,node)
+            val = node.top >= obj.top &&...
+                    node.bottom <= obj.bottom &&...
+                    node.left >= obj.left &&...
+                    node.right <= obj.right;
+            % for finihed nodes only
         end
         
     end

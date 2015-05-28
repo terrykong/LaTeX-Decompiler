@@ -97,7 +97,7 @@ classdef RectangleList < handle
                 s = 1;
                 return
             end
-            s = 1+obj.tail.size();
+            s = 1+obj.tail.objSize();
         end
         
         function clear(obj)

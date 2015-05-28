@@ -6,6 +6,7 @@ classdef RectangleTree < handle
         root   @RectangleNode
         left;
         right;
+        seen@logical = false
     end
     
     methods
@@ -78,8 +79,12 @@ classdef RectangleTree < handle
             % Check for calling side
             if ~strcmp(newSide,side) && ~strcmp(side,'root')
                 % Backtracking side below is opposite to above: obj is a left or right parent
-                storeTree = obj;
-                obj = storeTreeDown;
+                storeTree = RectangleTree(obj.root);
+                storeTree.left = obj.left;
+                storeTree.right = obj.right;
+                obj.root = storeTreeDown.root;
+                obj.left = storeTreeDown.left;
+                obj.right = storeTreeDown.right;
             else
                 storeTree = storeTreeDown;
             end
@@ -129,6 +134,20 @@ classdef RectangleTree < handle
             if numel(obj.right) ~= 0
                 obj.right.recPrint(indent+4);
             end
+        end
+        
+        function debugCycles(obj)
+            if obj.seen
+                throw(MException('','Fucked up'));
+            end
+            obj.seen = true;
+            if numel(obj.left) > 0
+                debugCycles(obj.left);
+            end
+            if numel(obj.right) > 0
+                debugCycles(obj.right);
+            end
+            obj.seen = false;
         end
     end
     

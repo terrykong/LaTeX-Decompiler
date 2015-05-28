@@ -80,7 +80,51 @@ classdef RectangleTree < handle
             end
         end
         
+        function val = depth(obj)
+            if numel(obj.left) == 0 && numel(obj.right) == 0
+                val = 1;
+                return
+            end
+            if numel(obj.left) == 0
+                val = 1 + obj.right.depth();
+                return
+            end
+            if numel(obj.right) == 0
+                val = 1 + obj.left.depth();
+                return
+            end
+            val = 1 + max(obj.left.depth(),obj.right.depth());
+        end
+        
+        function val = objSize(obj)
+            if numel(obj.left) == 0 && numel(obj.right) == 0
+                val = 1;
+                return
+            end
+            if numel(obj.left) == 0
+                val = 1 + obj.right.objSize();
+                return
+            end
+            if numel(obj.right) == 0
+                val = 1 + obj.left.objSize();
+                return
+            end
+            val = 1 + obj.left.objSize() + obj.right.objSize();
+        end
+        
+        function print(obj)
+            obj.recPrint(0);
+        end
+        function recPrint(obj,indent)
+            x = obj.root.print();
+            disp([repmat(' ',1,indent),'( [',num2str(x(1)),', ',num2str(x(2)),'], ',num2str(x(3)),')',]);
+            if numel(obj.left) ~= 0
+                obj.left.recPrint(indent+4);
+            end
+            if numel(obj.right) ~= 0
+                obj.right.recPrint(indent+4);
+            end
+        end
     end
     
 end
-

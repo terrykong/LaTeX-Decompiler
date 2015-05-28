@@ -48,7 +48,7 @@ classdef RectangleList < handle
             vals = [obj.head.print(),obj.tail.print()];
         end
         
-        function s = size(obj)
+        function s = objSize(obj)
             if numel(obj.head) == 0
                 s = 0;
                 return

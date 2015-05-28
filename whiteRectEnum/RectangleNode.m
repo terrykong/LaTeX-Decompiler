@@ -43,7 +43,7 @@ classdef RectangleNode < handle
         
         function [left,right] = split(obj,yval)
             left = RectangleNode(obj.top,obj.left,yval);
-            right = RectangleNode(yval,obj.left,yval);
+            right = RectangleNode(yval,obj.left,obj.bottom);
         end
         
     end

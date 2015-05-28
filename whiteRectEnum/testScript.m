@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 imInit = imread('testIm/001.jpg');
 n = 1165;
 im = ~im2bw(imInit(1125:min(n,end),1125:min(n,end)),0.5);
@@ -7,6 +8,13 @@ set(0,'RecursionLimit',500);
 %%
 A = [im,ones(size(im,1),1)];
 
+=======
+A = [1,0,1;...
+     1,0,1;...
+     0,0,1];
+A = repmat(A,2,2);
+figure; imagesc(A); colormap('gray')
+>>>>>>> Stashed changes
 fst = RectangleNode(0,0,size(A,1));
 tree = RectangleTree(fst);
 

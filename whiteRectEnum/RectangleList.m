@@ -38,7 +38,7 @@ classdef RectangleList < handle
         
         function vals = print(obj)
             if numel(obj.head) == 0
-                vals = []
+                vals = [];
                 return
             end
             if numel(obj.tail) == 0

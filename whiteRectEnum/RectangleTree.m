@@ -33,7 +33,10 @@ classdef RectangleTree < handle
                 outputNode = obj.root.copy();
                 outputNode.right = xval;
                 outputNode.active = false;
-                outputList.insertDecr(outputNode);
+                if (outputNode.right - outputNode.left) > 1 &&...
+                        (outputNode.bottom - outputNode.top) > 1
+                    outputList.insertDecr(outputNode);
+                end
                 [lnode,rnode] = obj.root.split(yval);
                 if strcmp(side,'root') || strcmp(side,'left')
                     obj.root = rnode;
@@ -60,7 +63,10 @@ classdef RectangleTree < handle
             outputNode = obj.root.copy();
             outputNode.right = xval;
             outputNode.active = false;
-            outputList.insertDecr(outputNode);
+            if (outputNode.right - outputNode.left) > 1 &&...
+                    (outputNode.bottom - outputNode.top) > 1
+                outputList.insertDecr(outputNode);
+            end
             
             % Narrow the root scope
             [lnode,rnode] = obj.root.split(yval);

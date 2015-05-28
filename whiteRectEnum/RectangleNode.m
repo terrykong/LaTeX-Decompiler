@@ -12,9 +12,9 @@ classdef RectangleNode < handle
     
     methods
         function obj = RectangleNode(top, left, bottom)
-            validateattributes(top,{'numeric'},{'scalar','integer','>',0},'','top edge',1);
-            validateattributes(left,{'numeric'},{'scalar','integer','>',0},'','left edge',2);
-            validateattributes(bottom,{'numeric'},{'scalar','integer','>',0},'','bottom edge',3);
+            validateattributes(top,{'numeric'},{'scalar','>=',0},'','top edge',1);
+            validateattributes(left,{'numeric'},{'scalar','>=',0},'','left edge',2);
+            validateattributes(bottom,{'numeric'},{'scalar','>=',0},'','bottom edge',3);
             obj.top = top;
             obj.left = left;
             obj.bottom = bottom;

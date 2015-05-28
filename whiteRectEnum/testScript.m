@@ -1,46 +1,31 @@
-%%
-testIm = logical(floor(rand(200)+0.5));
-% testIm = [false,false]
-% testIm = false(2);
-circ = [true(2,size(testIm,2)+4);true(size(testIm,1),2),testIm,true(size(testIm,1),2);true(2,size(testIm,2)+4)];
+A = [1,1,1;...
+     0,0,1;...
+     0,0,1];
 
-sides = zeros(0,4); % left top right bottom
-rectangles = [];
-for row = 3:(size(circ,1)-2)
-    for col = 3:(size(circ,2)-2)
-        if ~circ(row,col)
-            fstCol = find(circ(row-1,col:end),1);
-            fstRow = find(circ(row:end,col-1),1);
-            maxCol = find(circ(row,col:end),1);
-            maxRow = find(circ(row:end,col),1);
-            foundRect = [];
-            standbyRect = [];
-            maxColInc = maxCol-2;
-            for rowInc = (fstRow-1):(maxRow-1)
-                x = find(circ(row+rowInc,col:(col+maxColInc)),1)-2;
-                if numel(x) > 0
-                    if x < maxColInc
-                        if x < fstCol-2
-                            break
-                        end
-                        foundRect = [foundRect;...
-                            col,row,col+maxColInc,row+rowInc-1];
-                        
-                        testIm2 = double(testIm);
-                        testIm2((row:(row+rowInc-1))-2,(col:(col+maxColInc))-2) = 2;
-                        [testIm,testIm2];
-                        
-                        maxColInc = x;
-                            
-                    end
-                end
+fst = RectangleNode(0,0,size(A,1));
+tree = RectangleTree(fst);
+
+finalList = [];
+
+for j = 1:size(A,2);
+    for i = 1:size(A,1)
+        if A(i,j) == 1
+            [outputList, tree] = tree.processPoint(j-0.5,i-0.5,0,size(A,1));
+            list = outputList.print();
+            listN = [];
+            if numel(list) > 0
+                listN = list;
+                listN(list == 0) = -0.5;
+                listN(list == size(A,1)) = size(A,1) + 0.5;
+                listN(1,:) = round(listN(1,:)+1.5);
+                listN(2,:) = round(listN(2,:)-0.5);
+                listN(3,:) = round(listN(3,:)+1.5);
+                listN(4,:) = round(listN(4,:)-0.5);
             end
-            
-            % foundRect = [foundRect;...
-            % col,row,col+maxColInc,row+maxRow-2];
-            
-            rectangles = [rectangles;foundRect];
+            finalList = [finalList,listN];
+%             tree.print();
+%             input([num2str(i),' ',num2str(j)]);
         end
     end
 end
-rectangles = rectangles-2;
+finalList

@@ -1,6 +1,10 @@
 function [ output_image ] = findCorners( lines, input_image)
-% Find intersections of e
-%   Detailed explanation goes here
+% Find intersections of edges given in lines output of Hough transform
+% NOT CURRENTLY USED 
+%   If at least 4 corners can be found, find homography and map corners to
+%   corners of the output square
+%    -- Homography currenly flips over and rotates 90 degrees--need to fix,
+%   but foundation for later slant stuff
 
 for k = 1:length(lines)
     xy = [lines(k).point1; lines(k).point2];

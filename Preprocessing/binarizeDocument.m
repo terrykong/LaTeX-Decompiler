@@ -50,18 +50,24 @@ for row_tile= 1:num_tiles_row
             % find local threshold and increment counter
             local_thresh = graythresh(uint8(255*input_window));
             thresholded_window = (input_window > local_thresh);
-            % apply double threshold
+            
+            %% apply double threshold
+            % not actually used-will certainly connect components, but
+            % maybe too much? letters are all connected, but if we don't do
+            % text recognition
             double_threshed = thresholded_window;
             % find values above otsu threshold by a small amount
             [mid_val_row,mid_val_col] = find( (input_window>local_thresh) & ...
                 (input_window<1.1*local_thresh));
             % see if any of these values are in 8-neighborhood of values 
-            % lower than the otsu threshold
+            % lower than the otsu threshold - if so mark them as black
             for i = 1:length(mid_val_row)
                 double_threshed(mid_val_row(i),mid_val_col(i)) = all(all(thresholded_window(...
                     max(1,mid_val_row(i)-1):min(size(input_window,1),mid_val_row(i)+1),...
                     max(1,mid_val_col(i)-1):min(size(input_window,2),mid_val_col(i)+1))));
             end
+            % use thresholded_window for single threshold, double_threshed
+            % for double threshold (chunkier text)
             binarized_image(y_range,x_range) = binarized_image(y_range,x_range)...
                 + thresholded_window;
         else
@@ -84,16 +90,6 @@ imshow(binarized_image)
 
 % % http://liris.cnrs.fr/christian.wolf/papers/tr-rfv-2002-01.pdf
 % % use a double threshold
-% h = imhist(input_image);
-% %find first mode
-% m0 = find(h = max(h),1));
-% alpha = .8;
-% thresh_low = m0 + alpha*(thresh_high-m0);
-%
-% bina
-% binarized_image(input_image>thresh_high) = 1;
-% binarized_image(input_image<thresh_low) = 0;
-
 
 end
 

@@ -8,27 +8,32 @@ function [ output_image ] = rectifyDocument( input_image )
 
 [num_rows, num_cols] = size(input_image);
 %% Prepare the image for Hough
-% downsample to speed up processing? grabs more text lines
+% downsample to speed up processing? grabs more hough lines in text :(
 M = 1;
 image_downsampled = input_image(1:M:end,1:M:end);
-%remove text via median filtering -- check w/ light background
-image_no_text = image_downsampled; %medfilt2(image_downsampled,[9 9]);
+%remove text via median filtering -- not sure this actually helps, but in
+%literature
+image_no_text = medfilt2(image_downsampled,[9 9]);
 
 %get Canny edges
 canny_thresh = [.05 .2];
 canny_sigma = sqrt(8);
-edge_im = edge(input_image,'canny',canny_thresh,canny_sigma);
+edge_im = edge(image_no_text,'canny',canny_thresh,canny_sigma);
+
 % %get LoG edges - not great: detects many false alarms if anything at all
 % % values probably not super robust to all images
 % log_thresh = [.05 .2];
 % log_sigma = sqrt(8);
 % edge_im = edge(input_image,'log',log_thresh,log_sigma);
+
 %make edges more visible
 edge_im = imdilate(edge_im,strel('square',5));
 
 figure
 imshow(edge_im)
 
+% Next: try to find connected component of edges to determine skew and
+% boundaries
 %% Apply Hough to find directions of lines
 thetaVec = -90:.5:89.5;
 [H,theta,rho] = hough(edge_im, 'Theta', thetaVec);
@@ -78,7 +83,8 @@ output_image = imrotate(input_image,houghTheta,'bilinear');
 
 %% Find where longest Hough Transform lines map to after rotation 
 % to detect edge of paper
-% apply rotation matrix to lines
+% apply rotation matrix to lines: assumption is that they will give max and
+% min pixel position in x & y directions... perhaps not the most robust.
 rot_mat = [cosd(houghTheta) sind(houghTheta); -sind(houghTheta) cosd(houghTheta)];
 for i = 1:4
     longest_edges(:,2*i-1) = lines(sorted_idx(i)).point1';

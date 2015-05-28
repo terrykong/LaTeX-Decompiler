@@ -3,8 +3,9 @@ imInit = imread('testIm/001.jpg');
 cd whiteRectEnum
 
 n = 1165;
-im = ~im2bw(imInit(1125:min(n,end),1125:min(n,end)),0.5);
-
+im = im2bw(imInit(1125:min(n,end),1125:min(n,end)),0.5);
+[im, componentLocation] = outlineConnectedComponents(im);
+im = ~im;
 set(0,'RecursionLimit',500);
 
 %%

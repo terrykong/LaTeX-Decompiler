@@ -1,4 +1,6 @@
 function [ rotTheta ] = determineSkew( input_image )
+% NOT USED
+% Methods to determine skew of paper-gradient direction, Hough
 % Determine the angle to which the input image is rotated. The input
 % document is assumed to be mostly text
 global_thresh = graythresh(uint8(255*input_image));

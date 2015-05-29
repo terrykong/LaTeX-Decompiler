@@ -20,19 +20,19 @@ classdef RectangleNode < handle
             obj.bottom = bottom;
         end
         
-        function val = metric(obj)
+        function val = area(obj)
             if ~obj.active
-                val = (obj.bottom-obj.top+1)*(obj.left-obj.right+1);
+                val = (obj.bottom-obj.top+1)*(obj.right-obj.left+1);
             else
                 val = 0;
             end
         end
         
         function array = print(obj)
-           array = [obj.top;obj.bottom;obj.left;-1];
-           if numel(obj.right) ~= 0
-               array(4) = obj.right;
-           end
+            array = [obj.top;obj.bottom;obj.left;-1];
+            if numel(obj.right) ~= 0
+                array(4) = obj.right;
+            end
         end
         
         function node = copy(obj)
@@ -47,13 +47,31 @@ classdef RectangleNode < handle
         end
         
         function val = includes(obj,node)
-            val = node.top >= obj.top &&...
-                    node.bottom <= obj.bottom &&...
-                    node.left >= obj.left &&...
-                    node.right <= obj.right;
             % for finihed nodes only
+            val = node.left >= obj.left && ...
+                node.bottom <= obj.bottom && ...
+                node.top >= obj.top && ...
+                node.right <= obj.right;
         end
         
+        function convertNode(obj)
+            if obj.top == 0
+                obj.top = -0.5;
+            end
+            if obj.left == 0
+                obj.left = -0.5;
+            end
+            if mod(obj.bottom,1) == 0
+                obj.bottom = obj.bottom + 0.5;
+            end
+            if mod(obj.right,1) == 0
+                obj.right = obj.right + 0.5;
+            end
+            obj.top = round(obj.top+1.5);
+            obj.bottom = round(obj.bottom-0.5);
+            obj.left = round(obj.left+1.5);
+            obj.right = round(obj.right-0.5);
+        end
     end
     
 end

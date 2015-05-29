@@ -2,7 +2,7 @@ classdef RectangleList < handle
     %RECTANGLELIST Summary of this class goes here
     %   Detailed explanation goes here
     
-   
+    
     %% Correct the metric
     
     properties
@@ -51,6 +51,10 @@ classdef RectangleList < handle
             if numel(newNode) > 0
                 node = newNode;
             end
+            obj.insertDecrRec(node);
+        end
+        
+        function insertDecrRec(obj,node)
             if numel(obj.head) == 0
                 obj.head = node;
                 return
@@ -58,8 +62,8 @@ classdef RectangleList < handle
             if numel(obj.tail) == 0
                 obj.tail = RectangleList([],[]);
             end
-            if node.metric() >= obj.head.metric()
-%             if node >= obj.head
+            if node.area() >= obj.head.area()
+                %             if node >= obj.head
                 obj.tail = RectangleList(obj.head,obj.tail);
                 obj.head = node;
             else

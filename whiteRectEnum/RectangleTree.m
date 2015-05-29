@@ -35,6 +35,7 @@ classdef RectangleTree < handle
                 outputNode.active = false;
                 if (outputNode.right - outputNode.left) > 1 &&...
                         (outputNode.bottom - outputNode.top) > 1
+                    outputNode.convertNode();
                     outputList.insertDecr(outputNode);
                 end
                 [lnode,rnode] = obj.root.split(yval);
@@ -50,12 +51,35 @@ classdef RectangleTree < handle
             end
             % Not the leaf
             % Searching correct side - tree descent
-            if yval <= obj.left.root.bottom
+            if yval < obj.left.root.bottom
                 newSide = 'left';
                 storeTreeDown = obj.left.exploreDown(outputList,newSide,xval,yval);
-            else
-                newSide = 'right';
-                storeTreeDown = obj.right.exploreDown(outputList,newSide,xval,yval);
+            else if yval > obj.left.root.bottom
+                    newSide = 'right';
+                    storeTreeDown = obj.right.exploreDown(outputList,newSide,xval,yval);
+                else % Split here, do not go down
+                    % output the node
+                    outputNode = obj.root.copy();
+                    outputNode.right = xval;
+                    outputNode.active = false;
+                    if (outputNode.right - outputNode.left) > 1 &&...
+                            (outputNode.bottom - outputNode.top) > 1
+                        outputNode.convertNode();
+                        outputList.insertDecr(outputNode);
+                    end
+                    if strcmp(side,'right')
+                        storeTree = obj.right;
+                        obj.root = obj.left.root;
+                        obj.left = obj.left.left;
+                        obj.right = obj.left.right;
+                    else
+                        storeTree = obj.left;
+                        obj.root = obj.right.root;
+                        obj.left = obj.right.left;
+                        obj.right = obj.right.right;
+                    end
+                    return
+                end
             end
             
             % Backtracking from recursive call
@@ -65,6 +89,7 @@ classdef RectangleTree < handle
             outputNode.active = false;
             if (outputNode.right - outputNode.left) > 1 &&...
                     (outputNode.bottom - outputNode.top) > 1
+                outputNode.convertNode();
                 outputList.insertDecr(outputNode);
             end
             

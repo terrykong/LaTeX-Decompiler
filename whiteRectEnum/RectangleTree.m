@@ -4,8 +4,8 @@ classdef RectangleTree < handle
     
     properties
         root   @RectangleNode
-        left;
-        right;
+        left
+        right
         seen@logical = false
     end
     
@@ -70,8 +70,8 @@ classdef RectangleTree < handle
                     if strcmp(side,'right')
                         storeTree = obj.right;
                         obj.root = obj.left.root;
-                        obj.left = obj.left.left;
                         obj.right = obj.left.right;
+                        obj.left = obj.left.left;
                     else
                         storeTree = obj.left;
                         obj.root = obj.right.root;

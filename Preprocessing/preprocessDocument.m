@@ -13,8 +13,6 @@ function [ processed_image ] = preprocessDocument( input_image )
 
 input_image = rgb2gray(im2double(input_image));
 
-rectified_image = rectifyDocument(input_image);
-processed_image = binarizeDocument(rectified_image);
 
 end
 

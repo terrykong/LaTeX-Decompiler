@@ -18,7 +18,7 @@ image_no_text = medfilt2(image_downsampled,[9 9]);
 %get Canny edges
 canny_thresh = [.05 .2];
 canny_sigma = sqrt(8);
-edge_im = edge(image_no_text,'canny',canny_thresh,canny_sigma);
+edge_im = edge(input_image,'canny',canny_thresh,canny_sigma);
 
 % %get LoG edges - not great: detects many false alarms if anything at all
 % % values probably not super robust to all images

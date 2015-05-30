@@ -76,47 +76,49 @@ gradTheta = maxTheta
 
 rotTheta = gradTheta;
 
-% %% Hough transform
-% % grabs angles running along 45 degrees
+%% Hough transform
+% grabs angles running along 45 degrees
 % angle_range = max(bin_min-10,1):min(bin_max+10,length(thetaVec));
-% thetaVec = thetaVec; %(angle_range);
-% [H,theta,rho] = hough(binarized_image, 'Theta', thetaVec);
-% numPeaks = 40;
-% thresh = 0.2*max(H(:));
-% peaks = houghpeaks(H, numPeaks, 'Threshold', thresh);
-% thetaHist = hist(theta(peaks(:,2)), thetaVec);
-% figure (3); clf;
-% subplot(2,1,1);
-% warning off; imshow(imadjust(mat2gray(H)), 'XData', theta, 'YData', rho, ...
-%  'InitialMagnification', 'fit'); axis on; axis normal; hold on; warning on;
-% plot(theta(peaks(:,2)), rho(peaks(:,1)), 'ys');
-% xlabel('\theta (degrees)'); ylabel('\rho');
-% subplot(2,1,2);
-% bar(thetaVec, thetaHist); grid on;
-% axis([min(thetaVec) max(thetaVec) 0 max(thetaHist)+2]);
-% xlabel('\theta (degrees)'); ylabel('Number of Peaks');
-% [maxHist, maxIdx] = max(thetaHist);
-% houghTheta = median(theta(peaks(:,2)));
-% 
-% %% Hough transform of inverse of image
-% [H,theta,rho] = hough(~binarized_image, 'Theta', thetaVec);
-% numPeaks = 40;
-% thresh = 0.2*max(H(:));
-% peaks = houghpeaks(H, numPeaks, 'Threshold', thresh);
-% thetaHist = hist(theta(peaks(:,2)), thetaVec);
-% figure (4); clf;
-% subplot(2,1,1);
-% warning off; imshow(imadjust(mat2gray(H)), 'XData', theta, 'YData', rho, ...
-%  'InitialMagnification', 'fit'); axis on; axis normal; hold on; warning on;
-% plot(theta(peaks(:,2)), rho(peaks(:,1)), 'ys');
-% xlabel('\theta (degrees)'); ylabel('\rho');
-% subplot(2,1,2);
-% bar(thetaVec, thetaHist); grid on;
-% axis([min(thetaVec) max(thetaVec) 0 max(thetaHist)+2]);
-% xlabel('\theta (degrees)'); ylabel('Number of Peaks');
-% [maxHist, maxIdx] = max(thetaHist);
-% houghInvTheta = median(theta(peaks(:,2)));
-% 
-% [gradTheta, houghTheta, houghInvTheta]
+M = 3;
+binarized_image = binarized_image(1:2:end,1:2:end);
+thetaVec = -30:.5:30; %thetaVec; %(angle_range);
+[H,theta,rho] = hough(binarized_image, 'Theta', thetaVec);
+numPeaks = 40;
+thresh = 0.2*max(H(:));
+peaks = houghpeaks(H, numPeaks, 'Threshold', thresh);
+thetaHist = hist(theta(peaks(:,2)), thetaVec);
+figure (3); clf;
+subplot(2,1,1);
+warning off; imshow(imadjust(mat2gray(H)), 'XData', theta, 'YData', rho, ...
+ 'InitialMagnification', 'fit'); axis on; axis normal; hold on; warning on;
+plot(theta(peaks(:,2)), rho(peaks(:,1)), 'ys');
+xlabel('\theta (degrees)'); ylabel('\rho');
+subplot(2,1,2);
+bar(thetaVec, thetaHist); grid on;
+axis([min(thetaVec) max(thetaVec) 0 max(thetaHist)+2]);
+xlabel('\theta (degrees)'); ylabel('Number of Peaks');
+[maxHist, maxIdx] = max(thetaHist);
+houghTheta = median(theta(peaks(:,2)));
+
+%% Hough transform of inverse of image
+[H,theta,rho] = hough(~binarized_image, 'Theta', thetaVec);
+numPeaks = 40;
+thresh = 0.2*max(H(:));
+peaks = houghpeaks(H, numPeaks, 'Threshold', thresh);
+thetaHist = hist(theta(peaks(:,2)), thetaVec);
+figure (4); clf;
+subplot(2,1,1);
+warning off; imshow(imadjust(mat2gray(H)), 'XData', theta, 'YData', rho, ...
+ 'InitialMagnification', 'fit'); axis on; axis normal; hold on; warning on;
+plot(theta(peaks(:,2)), rho(peaks(:,1)), 'ys');
+xlabel('\theta (degrees)'); ylabel('\rho');
+subplot(2,1,2);
+bar(thetaVec, thetaHist); grid on;
+axis([min(thetaVec) max(thetaVec) 0 max(thetaHist)+2]);
+xlabel('\theta (degrees)'); ylabel('Number of Peaks');
+[maxHist, maxIdx] = max(thetaHist);
+houghInvTheta = median(theta(peaks(:,2)));
+
+[gradTheta, houghTheta, houghInvTheta]
 end
 

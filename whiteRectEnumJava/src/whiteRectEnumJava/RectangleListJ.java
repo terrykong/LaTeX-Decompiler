@@ -80,5 +80,19 @@ public class RectangleListJ {
 		} else
 			tail.insertDecrRec(node);
 	}
+	
+	int[][] print() {
+		int[][] output = new int[objSize()][];
+		print(output,0);
+		return output;
+	}
+	
+	void print(int[][] array, int index) {
+		if (head == null)
+			return;
+		array[index] = head.print();
+		if (tail != null)
+			print(array, index+1);
+	}
 		
 }

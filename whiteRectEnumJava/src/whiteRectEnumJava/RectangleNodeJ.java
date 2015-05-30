@@ -25,7 +25,7 @@ public class RectangleNodeJ {
 			return (bottom - top + 1) * (right - left + 1);
 	}
 	
-	int[] array() {
+	int[] print() {
 		return new int[] {top,bottom,left,right};
 	}
 	
@@ -41,6 +41,25 @@ public class RectangleNodeJ {
 	}
 	
 	void convertNode() {
-		//TODO: modify coordinates from doubled system to single px.
+		if (top == 0)
+			top = -1;
+		if (left == 0)
+			left = -1;
+		if (bottom % 2 == 0)
+			bottom++;
+		if (right % 2 == 0)
+			right++;
+		
+		top = (top+3)/2;
+		bottom = (bottom-1)/2;
+		left = (left+3)/2;
+		right = (right-1)/2;
+	}
+	
+	RectangleNodeJ[] split(int val) {
+		RectangleNodeJ[] output = new RectangleNodeJ[2];
+		output[0] = new RectangleNodeJ(top,left,val);
+		output[1] = new RectangleNodeJ(val,left,top);
+		return output;
 	}
 }

@@ -1,6 +1,6 @@
 imInit = imread('../testim/001.jpg');
 
-n = 1300;
+n = 1150;
 im = im2bw(imInit(1100:min(n,end),1100:min(n,end)),0.5);
 [im, componentLocation] = outlineConnectedComponents(im);
 im = ~im;
@@ -8,7 +8,6 @@ set(0,'RecursionLimit',500);
 
 %%
 A = [im,ones(size(im,1),1)];
-
 
 fst = RectangleNode(0,0,size(A,1));
 tree = RectangleTree(fst);
@@ -29,16 +28,16 @@ list = nodeList.print();
 toc
 
 %%
-figure(1)
-imagesc(A,[0 1]); axis('image'); colorbar;
-
-B = A*0.5+0.5;
-for rect = list
-    B = A*0.5+0.5;
-    B(rect(1):rect(2),rect(3):rect(4)) = 0;
-imagesc(B,[0 1]); axis('image'); colorbar;
-rect
-input('')
-end
-figure(2)
-imagesc(B,[0 1]); axis('image'); colorbar;
+% figure(1)
+% imagesc(A,[0 1]); axis('image'); colorbar;
+% 
+% B = A*0.5+0.5;
+% for rect = list
+%     B = A*0.5+0.5;
+%     B(rect(1):rect(2),rect(3):rect(4)) = 0;
+% imagesc(B,[0 1]); axis('image'); colorbar;
+% rect
+% input('')
+% end
+% figure(2)
+% imagesc(B,[0 1]); axis('image'); colorbar;

@@ -67,7 +67,7 @@ classdef RectangleList < handle
                 obj.tail = RectangleList(obj.head,obj.tail);
                 obj.head = node;
             else
-                obj.tail.insertDecr(node);
+                obj.tail.insertDecrRec(node);
             end
         end
         

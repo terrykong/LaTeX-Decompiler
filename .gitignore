@@ -1,2 +1,6 @@
 #Matlab
 *.asv
+.metadata*
+whiteRectEnumJava/.gitignore
+whiteRectEnumJava/.classpath
+whiteRectEnumJava/.project

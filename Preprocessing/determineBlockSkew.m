@@ -1,4 +1,4 @@
-function [ hough_data ] = determineBlockSkew( input_image )
+function [ output_im ] = determineBlockSkew( input_image )
 % Processes smaller blocks of the input image
 %   Returns data about variance, the hough transform theta peaks
 [num_rows, num_cols] = size(input_image);
@@ -99,8 +99,13 @@ theta_perp = -44.5:.5:44.5;
 % find the median)
 max_index = hough_data_perp == max(hough_data_perp);
 theta_guess = median(theta_perp(max_index))
-
-output_im = imrotate(input_image,theta_guess,'bilinear');
+original_image = zeros(size(input_image,1),size(input_image,2),2);
+original_image(:,:,1) = input_image;
+original_image(:,:,2) = ones(size(input_image));
+rotated_im = imrotate(original_image,theta_guess,'bilinear');
+output_im = rotated_im(:,:,1);
+% make new pixels from imrotate black
+output_im(rotated_im(:,:,2)==0) = 1;
 % figure
 % imshow(output_im);
 end

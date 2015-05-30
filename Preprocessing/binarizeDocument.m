@@ -32,18 +32,18 @@ for row_tile= 1:num_tiles_row
         if var(input_window(:)) > var_thresh
             % find the first and last tiles with high variance--represents
             % where text is, and will provide our estimate of margin
-            if min_row<min_bounds_text_tiles(1)
-                min_bounds_text_tiles(1) = min_row;
-            end
-            if max_row>max_bounds_text_tiles(1)
-                max_bounds_text_tiles(1) = max_row;
-            end
-            if min_col<min_bounds_text_tiles(2)
-                min_bounds_text_tiles(2) = min_col;
-            end
-            if max_col>max_bounds_text_tiles(2)
-                max_bounds_text_tiles(2) = max_col;
-            end
+%             if min_row<min_bounds_text_tiles(1)
+%                 min_bounds_text_tiles(1) = min_row;
+%             end
+%             if max_row>max_bounds_text_tiles(1)
+%                 max_bounds_text_tiles(1) = max_row;
+%             end
+%             if min_col<min_bounds_text_tiles(2)
+%                 min_bounds_text_tiles(2) = min_col;
+%             end
+%             if max_col>max_bounds_text_tiles(2)
+%                 max_bounds_text_tiles(2) = max_col;
+%             end
 
             % find local threshold and increment counter
             local_thresh = graythresh(uint8(255*input_window));
@@ -81,8 +81,8 @@ end
 % the output to be 1 at that point
 binarized_image = binarized_image./num_times_evaluated>.75;
 
-binarized_image = binarized_image(min_bounds_text_tiles(1):max_bounds_text_tiles(1),...
-    min_bounds_text_tiles(2):max_bounds_text_tiles(2));
+% binarized_image = binarized_image(min_bounds_text_tiles(1):max_bounds_text_tiles(1),...
+%     min_bounds_text_tiles(2):max_bounds_text_tiles(2));
 % figure
 % imshow(binarized_image)
 

@@ -54,7 +54,6 @@ public class RectangleTreeJ {
 			}
 			return storeTree;
 		}
-
 		
 		int newSide = -1;
 		RectangleTreeJ storeTreeDown;

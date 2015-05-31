@@ -17,7 +17,6 @@ public class RectangleNodeJ {
 		right = -1;
 		active = true;
 	}
-
 	
 	double metric() {
 		if (active)

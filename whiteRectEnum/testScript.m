@@ -1,25 +1,29 @@
 imInit = imread('../testim/001.jpg');
 
 n = 1700;
-im = im2bw(imInit(1100:min(n,end),1100:min(n,end)),0.5);
-% im = im2bw(imInit);
+% im = im2bw(imInit(1100:min(n,end),1100:min(n,end)),0.5);
+im = im2bw(imInit);
 [im, componentLocation] = outlineConnectedComponents(im);
-im = ~im;
+
 set(0,'RecursionLimit',500);
 
+
+[im2,mask,boundingBox,CCLoc] = oCCReduce(im);
+im = im2;
+im = ~im;
 %% Run those 2 lines if not done yet. If multiple time no worries
 javaaddpath('../whiteRectEnumJava/bin'); % assuming your matlab workspace is currently /LaTeX-Decompiler/whiterectEnum
 import whiteRectEnumJava.*
 
-    %%
+%%
 %     A = [im,ones(size(im,1),1)];
-%     tic; 
-% 
+%     tic;
+%
 %     fst = RectangleNode(0,0,size(A,1));
 %     tree = RectangleTree(fst);
-% 
+%
 %     nodeList = RectangleList([],[]);
-% 
+%
 %     [row,col] = find(A);
 %     for k = 1:numel(row)
 %         i = row(k);
@@ -47,9 +51,11 @@ toc
 % 
 % B = A*0.5+0.5;
 % for rect = list
-%     B = A*0.5+0.5;
+% %     B = A*0.5+0.5;
+% hold on
 %     B(rect(1):rect(2),rect(3):rect(4)) = 0;
-% imagesc(B,[0 1]); axis('image'); colorbar;
+% hold off
+%     imagesc(B,[0 1]); axis('image'); colorbar;
 % rect
 % input('')
 % end

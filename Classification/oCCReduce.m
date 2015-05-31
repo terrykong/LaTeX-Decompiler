@@ -5,19 +5,19 @@ function [reducedBox,mask,boundingBox,CCLoc] = oCCReduce( input_image )
 %   
 
 %% First Dilate
-% CC = bwconncomp(~input_image,4);
-% widths = zeros(1,CC.NumObjects);
-% for n = 1:CC.NumObjects
-%    [~,j] = ind2sub(size(input_image), CC.PixelIdxList{n});
-%    widths(n) = max(j) - min(j);
-% end
-% 
-% [h,bins] = hist(widths,20);
-% [~,bestWidth] = max(h);
-% dilatewidth = 0+1*round(bins(bestWidth)*2.5); % x1 width is conservative choice
-% se = strel(ones(1,dilatewidth));
-% input_image_dilate = ~imdilate(~input_image,se);
-input_image_dilate = input_image;
+CC = bwconncomp(~input_image,4);
+widths = zeros(1,CC.NumObjects);
+for n = 1:CC.NumObjects
+   [~,j] = ind2sub(size(input_image), CC.PixelIdxList{n});
+   widths(n) = max(j) - min(j);
+end
+
+[h,bins] = hist(widths,20);
+[~,bestWidth] = max(h);
+dilatewidth = 0+1*round(bins(bestWidth)*1); % x1 width is conservative choice
+se = strel(ones(1,dilatewidth));
+input_image_dilate = ~imclose(~input_image,se);
+%input_image_dilate = input_image;
 
 %% Find rectangles
 CC = bwconncomp(~input_image_dilate,4);

@@ -1,20 +1,21 @@
 package whiteRectEnumJava;
 
 public class RectangleListJ {
-	RectangleNodeJ head;
-	RectangleListJ tail;
 
-	RectangleListJ() {
+	public RectangleNodeJ head;
+	public RectangleListJ tail;
+
+	public RectangleListJ() {
 		head = null;
 		tail = null;
 	}
 
-	RectangleListJ(RectangleNodeJ rect) {
+	public RectangleListJ(RectangleNodeJ rect) {
 		head = rect;
 		tail = null;
 	}
 
-	RectangleListJ(RectangleNodeJ rect, RectangleListJ rectList) {
+	public RectangleListJ(RectangleNodeJ rect, RectangleListJ rectList) {
 		head = rect;
 		tail = rectList;
 	}
@@ -39,7 +40,7 @@ public class RectangleListJ {
 		else
 			return false;
 	}
-	
+
 	void removeHead() {
 		head = null;
 		if (tail != null) {
@@ -47,25 +48,25 @@ public class RectangleListJ {
 			tail = tail.tail;
 		}
 	}
-	
-	int objSize() {
+
+	public int objSize() {
 		if (head == null)
 			return 0;
 		if (tail == null)
 			return 1;
-		return 1+tail.objSize();
+		return 1 + tail.objSize();
 	}
-	
+
 	void clear() {
 		head = null;
 		tail = null;
 	}
-	
+
 	void insertDecr(RectangleNodeJ node) {
 		checkInclusion(node);
 		insertDecrRec(node);
 	}
-	
+
 	void insertDecrRec(RectangleNodeJ node) {
 		if (head == null) {
 			head = node;
@@ -73,26 +74,28 @@ public class RectangleListJ {
 		}
 		if (tail == null)
 			tail = new RectangleListJ();
-		
+
 		if (node.area() >= head.area()) {
-			tail = new RectangleListJ(head,tail);
+			tail = new RectangleListJ(head, tail);
 			head = node;
 		} else
 			tail.insertDecrRec(node);
 	}
-	
-	int[][] print() {
+
+	public int[][] print() {
 		int[][] output = new int[objSize()][];
-		print(output,0);
+		printRec(output, 0);
 		return output;
 	}
-	
-	void print(int[][] array, int index) {
-		if (head == null)
-			return;
-		array[index] = head.print();
-		if (tail != null)
-			print(array, index+1);
+
+	void printRec(int[][] array, int index) {
+		if (head != null) {
+			
+			array[index] = head.print();
+
+			if (tail != null)
+				tail.printRec(array, index + 1);
+		}
 	}
-		
+
 }

@@ -9,7 +9,7 @@ public class RectangleNodeJ {
 
 	boolean active;
 
-	RectangleNodeJ(int top, int left, int bottom) {
+	public RectangleNodeJ(int top, int left, int bottom) {
 		this.top = top;
 		this.bottom = bottom;
 		this.left = left;
@@ -37,10 +37,11 @@ public class RectangleNodeJ {
 	}
 	
 	boolean includes(RectangleNodeJ node) {
-		return node.left >= left && node.bottom <= bottom && node.top >= top && node.right <= right;
+		return (node.left >= left) && (node.bottom <= bottom) && (node.top >= top) && (node.right <= right);
 	}
 	
 	void convertNode() {
+		// System.out.println("Rect " + top + " " + bottom + " " + left +" " + right);
 		if (top == 0)
 			top = -1;
 		if (left == 0)
@@ -54,6 +55,9 @@ public class RectangleNodeJ {
 		bottom = (bottom-1)/2;
 		left = (left+3)/2;
 		right = (right-1)/2;
+
+		// System.out.println("Now  " + top + " " + bottom + " " + left +" " + right + "\n");
+		
 	}
 	
 	RectangleNodeJ[] split(int val) {

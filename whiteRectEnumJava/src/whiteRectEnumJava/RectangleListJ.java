@@ -20,25 +20,21 @@ public class RectangleListJ {
 		tail = rectList;
 	}
 
-	boolean checkInclusion(RectangleNodeJ node) {
+	RectangleNodeJ checkInclusion(RectangleNodeJ node) {
 		// output true and modification by reference to the superrectangle if
 		// inclusion found
 		// output false and input unmodified if no inclusion found
 		if (head == null)
-			return false;
-		if (head.includes(node)) {
-			node = head;
-			removeHead();
-			return true;
-		}
+			return node;
+		if (head.includes(node))
+			return null;
 		if (node.includes(head)) {
 			removeHead();
-			return true;
 		}
 		if (tail != null)
 			return tail.checkInclusion(node);
 		else
-			return false;
+			return node;
 	}
 
 	void removeHead() {
@@ -63,8 +59,8 @@ public class RectangleListJ {
 	}
 
 	void insertDecr(RectangleNodeJ node) {
-		checkInclusion(node);
-		insertDecrRec(node);
+		if (checkInclusion(node) != null)
+			insertDecrRec(node);
 	}
 
 	void insertDecrRec(RectangleNodeJ node) {
@@ -75,7 +71,7 @@ public class RectangleListJ {
 		if (tail == null)
 			tail = new RectangleListJ();
 
-		if (node.area() >= head.area()) {
+		if (node.metric() >= head.metric()) {
 			tail = new RectangleListJ(head, tail);
 			head = node;
 		} else
@@ -90,7 +86,7 @@ public class RectangleListJ {
 
 	void printRec(int[][] array, int index) {
 		if (head != null) {
-			
+
 			array[index] = head.print();
 
 			if (tail != null)

@@ -1,4 +1,4 @@
-function [ binarized_image ] = binarizeDocument( input_image )
+function [ binarized_image] = binarizeDocument( input_image )
 % Binarizes the input image of a text document
 %   Detailed explanation goes here
 
@@ -11,15 +11,12 @@ binarized_image = input_image>global_thresh;
 % parameters for local binarization
 window_size = 64;
 step_size = 32; % better but slower: 16
-var_thresh = .01;
+var_thresh = .02;
 
 num_tiles_row = floor(num_rows / step_size);
 num_tiles_col = floor(num_cols / step_size);
 binarized_image = zeros(num_rows,num_cols);
 num_times_evaluated = zeros(size(binarized_image));
-% keep track of margins
-max_bounds_text_tiles = zeros(2,1);
-min_bounds_text_tiles = inf(2,1);
 for row_tile= 1:num_tiles_row
     min_row = (row_tile-1)*step_size + 1;
     max_row = min(min_row+window_size-1,num_rows);
@@ -29,22 +26,11 @@ for row_tile= 1:num_tiles_row
         max_col = min(min_col+window_size-1,num_cols);
         x_range = min_col:max_col;
         input_window = input_image(y_range,x_range);
-        if var(input_window(:)) > var_thresh
-            % find the first and last tiles with high variance--represents
-            % where text is, and will provide our estimate of margin
-%             if min_row<min_bounds_text_tiles(1)
-%                 min_bounds_text_tiles(1) = min_row;
-%             end
-%             if max_row>max_bounds_text_tiles(1)
-%                 max_bounds_text_tiles(1) = max_row;
-%             end
-%             if min_col<min_bounds_text_tiles(2)
-%                 min_bounds_text_tiles(2) = min_col;
-%             end
-%             if max_col>max_bounds_text_tiles(2)
-%                 max_bounds_text_tiles(2) = max_col;
-%             end
-
+        var_local = var(input_window(:));
+        ratio_range = var_local*max(input_window(:))/min(input_window(:));
+        difference_range = var_local*...
+            (max(input_window(:))-min(input_window(:)))/min(input_window(:));
+        if ratio_range > var_thresh
             % find local threshold and increment counter
             local_thresh = graythresh(uint8(255*input_window));
             thresholded_window = (input_window > local_thresh);
@@ -79,12 +65,12 @@ end
 
 % if local thresholding evaluated as 1 more than half the time, consider
 % the output to be 1 at that point
-binarized_image = binarized_image./num_times_evaluated>.75;
+binarized_image = binarized_image./num_times_evaluated>.8;
 
 % binarized_image = binarized_image(min_bounds_text_tiles(1):max_bounds_text_tiles(1),...
 %     min_bounds_text_tiles(2):max_bounds_text_tiles(2));
-% figure
-% imshow(binarized_image)
+figure
+imshow(binarized_image)
 
 % % http://liris.cnrs.fr/christian.wolf/papers/tr-rfv-2002-01.pdf
 % % use a double threshold

@@ -77,6 +77,7 @@ public class RectangleListJ {
 		} else
 			tail.insertDecrRec(node);
 	}
+	
 
 	public int[][] print() {
 		int[][] output = new int[objSize()][];

@@ -18,6 +18,7 @@ public class MatlabComp {
 				tree = tree.processPoint(nodeList, 2 * j - 1, 2 * i - 1, 0,
 						2 * nRows);
 			}
+			
 
 			// return nodeList;
 			return nodeList.print();

@@ -5,7 +5,7 @@ function [ output_image ] = findPageMargins( input_image )
 output_image = input_image;
 % if there's a line with significantly more black pixels, it's probably
 % background/border, so remove
-projection_ratio_bound = 2.1;
+projection_ratio_bound = 2.7;
 % Only look at peaks of projection onto axis that have values in range of
 % median
 peak_range_low = .3;
@@ -53,12 +53,11 @@ y_max = y_peak_loc(end)+y_start-1;
 
 output_image = output_image(max(y_min-pixel_margin,1):...
     min(y_max+pixel_margin,size(output_image,1)),:);
-
+% figure
+% subplot(211)
+% imshow(output_image)
 %% Find x bounds
 x_projection = sum(~output_image,1);
-% figure
-% plot(x_projection)
-% title('projection of pixels on x axis')
 
 % make sure peaks differ from neighbors by at least 5 pixels
 threshold = 10; %(1/median(x_projection))-(1/median(x_projection+5));
@@ -95,12 +94,21 @@ x_max = x_peak_loc(end)+x_start-1;
 
 output_image = output_image(:,max(x_min-pixel_margin,1):...
     min(x_max+pixel_margin,size(output_image,2)));
+% subplot(212)
+% imshow(output_image)
+% figure
+% subplot(211)
+% plot(y_projection,1:length(y_projection))
+% title('projection of pixels on y axis')
+% subplot(212)
+% plot(1:length(x_projection),x_projection)
+% title('projection of pixels on x axis')
 
 %% Find y projection and bounds again
 %now that background in x-direction has been removed
 y_projection = sum(~output_image,2);
 
-threshold = 10;
+threshold = 5;
 [y_peak_val,y_peak_loc] = findpeaks(y_projection,'Threshold',threshold);
 % remove outliers -- most text lines will have same order of magnitude of
 % pixels, so any peaks with too many or too few pixels should be tossed out

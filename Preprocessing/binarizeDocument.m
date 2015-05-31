@@ -2,17 +2,16 @@ function [ binarized_image] = binarizeDocument( input_image )
 % Binarizes the input image of a text document
 %   Detailed explanation goes here
 
-%% find global threshold from Otsu's method
-global_thresh = graythresh(uint8(255*input_image));
-binarized_image = input_image>global_thresh;
+%% find global statistics
 
+var_all = var(input_image(:));
+mean_all = mean(input_image(:));
 %% Locally Adaptive Thresholding
 [num_rows,num_cols] = size(input_image);
 % parameters for local binarization
 window_size = 64;
-step_size = 32; % better but slower: 16
-var_thresh = .02;
-
+step_size = 32; 
+var_thresh = .4; %.2; %.02;
 num_tiles_row = floor(num_rows / step_size);
 num_tiles_col = floor(num_cols / step_size);
 binarized_image = zeros(num_rows,num_cols);
@@ -28,9 +27,7 @@ for row_tile= 1:num_tiles_row
         input_window = input_image(y_range,x_range);
         var_local = var(input_window(:));
         ratio_range = var_local*max(input_window(:))/min(input_window(:));
-        difference_range = var_local*...
-            (max(input_window(:))-min(input_window(:)))/min(input_window(:));
-        if ratio_range > var_thresh
+        if ratio_range/var_all/mean_all > var_thresh
             % find local threshold and increment counter
             local_thresh = graythresh(uint8(255*input_window));
             thresholded_window = (input_window > local_thresh);
@@ -56,7 +53,7 @@ for row_tile= 1:num_tiles_row
                 + thresholded_window;
         else
             binarized_image(y_range,x_range) = binarized_image(y_range,x_range)...
-                + 1; %(mean(input_window(:)) > global_thresh);
+                + 1; 
         end
         num_times_evaluated(y_range,x_range) = num_times_evaluated(y_range,x_range) ...
             + ones(size(input_window));
@@ -67,8 +64,6 @@ end
 % the output to be 1 at that point
 binarized_image = binarized_image./num_times_evaluated>.8;
 
-% binarized_image = binarized_image(min_bounds_text_tiles(1):max_bounds_text_tiles(1),...
-%     min_bounds_text_tiles(2):max_bounds_text_tiles(2));
 figure
 imshow(binarized_image)
 

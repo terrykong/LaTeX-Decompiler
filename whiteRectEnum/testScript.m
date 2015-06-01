@@ -9,13 +9,15 @@ set(0,'RecursionLimit',500);
 
 [im2,mask,boundingBox,CCLoc] = oCCReduce(im);
 im = im2;
-imBig = ~im;
+
+imBig = imdilate(~im,ones(4));
 im = imBig(1:4:end,1:4:end);
-for i = 1:4
-    for j = 1:4
-        im = or(im,imBig(i:4:end,j:4:end)); % FIXME
-    end
-end
+
+% end% for i = 1:4
+%     for j = 1:4
+%         im = or(im,imBig(i:4:end,j:4:end)); % FIXME
+%     end
+
 %% Run those 2 lines if not done yet. If multiple time no worries
 javaaddpath('../whiteRectEnumJava/bin'); % assuming your matlab workspace is currently /LaTeX-Decompiler/whiterectEnum
 import whiteRectEnumJava.*

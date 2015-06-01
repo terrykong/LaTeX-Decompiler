@@ -5,6 +5,11 @@ function [ binarized_image] = binarizeDocument( input_image )
 %% find global statistics
 
 var_all = var(input_image(:));
+if var_all > .10 % cap variance comparison
+    var_all = .01;
+elseif var_all >.06 
+    var_all = .11-var_all;
+end
 mean_all = mean(input_image(:));
 %% Locally Adaptive Thresholding
 [num_rows,num_cols] = size(input_image);
@@ -66,6 +71,7 @@ binarized_image = binarized_image./num_times_evaluated>.8;
 
 figure
 imshow(binarized_image)
+imwrite(binarized_image,'bin_im.jpg','jpg')
 
 % % http://liris.cnrs.fr/christian.wolf/papers/tr-rfv-2002-01.pdf
 % % use a double threshold

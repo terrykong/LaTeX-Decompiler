@@ -2,7 +2,7 @@
 %
 %   reducedBoxTopLeft (is downsampled by downFactor)
 %   reducedBoxTop     (is downsampled by downFactor)
-%   mask              (= 1 for big bounding boxes (likely figures))
+%   figmask              (= 1 for big bounding boxes (likely figures))
 %                     (@ original resolution not downsampled))
 %   boundingBox       (is downsampled by downFactor)
 %   CCLoc             (corners of all bounding boxes, i.e. CC)
@@ -11,7 +11,7 @@
 
 function [reducedBoxTopLeft,...
           reducedBoxTop,...
-          mask,...
+          figmask,...
           boundingBox,...
           CCLoc,...
           downFactor] = oCCReduce( input_image )
@@ -42,7 +42,7 @@ input_image_dilate = input_image;
 CC = bwconncomp(~input_image_dilate,4);
 CCLoc = zeros(CC.NumObjects,4);
 boundingBox = ones(size(input_image_dilate));
-mask = zeros(size(input_image_dilate));
+figmask = zeros(size(input_image_dilate));
 reducedBoxTopLeft = ones(size(input_image_dilate));
 reducedBoxTop = ones(size(input_image_dilate));
 for n = 1:CC.NumObjects
@@ -57,7 +57,7 @@ for n = 1:CC.NumObjects
    % for filled rect: boundingBox(min(i):max(i),min(j):max(j)) = 0;
    if (CCLoc(n,2)-CCLoc(n,1))*(CCLoc(n,4)-CCLoc(n,3)) > ...
            figAreaThresh*(prod(size(input_image_dilate)))
-       mask(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1):CCLoc(n,2)) = 1;
+       figmask(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1):CCLoc(n,2)) = 1;
    end
    reducedBoxTopLeft(CCLoc(n,3),[CCLoc(n,1):CCLoc(n,2)]) = 0;
    reducedBoxTopLeft(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1)) = 0;

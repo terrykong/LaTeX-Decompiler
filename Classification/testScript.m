@@ -22,7 +22,7 @@ for i = 1:blocks.NumObjects
     fprintf('@@@ i = %d\n',i)
     [blockType, textLines] = classifyText(blocks.PixelIdxList{i}, im)
     subplot(312); title(blockType)
-    pause(1);
+    pause;
    % return
 end
 

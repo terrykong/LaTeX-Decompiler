@@ -37,6 +37,7 @@ for n = 1:CC.NumObjects
    % for filled rect: boundingBox(min(i):max(i),min(j):max(j)) = 0;
    mask(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1):CCLoc(n,2)) = 1;
    reducedBox(CCLoc(n,3),[CCLoc(n,1):CCLoc(n,2)]) = 0;
+   reducedBox(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1)) = 0;
 end
 
 %imshow(boundingBox)

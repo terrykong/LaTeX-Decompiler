@@ -5,12 +5,8 @@ n = 1700;
 im = im2bw(imInit);
 [im, componentLocation] = outlineConnectedComponents(im);
 
-size(im)
-im = im(1:2407,1:2502);
 [imTopLeft,imTop,mask,boundingBox,CCLoc,downFactor] = oCCReduce(im);
-downFactor
 imReduced = ~imTopLeft;
-size(imReduced)
 
 %% Run those 2 lines if not done yet. If multiple time no worries
 javaaddpath('../whiteRectEnumJava/bin'); % assuming your matlab workspace is currently /LaTeX-Decompiler/whiterectEnum

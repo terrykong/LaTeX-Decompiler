@@ -26,6 +26,7 @@ passingRatio = 0.7; % if the weight is larger than this fraction of num of peaks
 gauss_sum = @(n) n*(n+1)/2;
 tinyTextAspectRatioThresh = 4;
 tinyTextAreaThresh = 0.05^2; % Percentage
+oddShapedCCThresh = 0.9;
 %%
 
 % Calculate the two key numbers: height and width
@@ -127,10 +128,19 @@ else
                     textLines = [];
                     return;
                 else
-                    blockType = 'figure';
-                    classifyReason = 'not enough peak/square-ish asp. rat';
-                    textLines = [];
-                    return;
+                    % If the area of the CC significantly smaller than
+                    % bounding box, it's text not a figure
+                    if length(CCpixels)/(height*width) < oddShapedCCThresh
+                        blockType = 'text';
+                        classifyReason = 'not enough peak/square-ish asp. rat/odd shaped CC';
+                        textLines = [];
+                        return;
+                    else
+                        blockType = 'figure';
+                        classifyReason = 'not enough peak/square-ish asp. rat';
+                        textLines = [];
+                        return;
+                    end
                 end
             end
         end

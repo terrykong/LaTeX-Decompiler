@@ -5,7 +5,8 @@ outStruct = classStruct;
 captionDistFac = 2;
 pageNumDistFac = 5;
 pageNumVertFraction = 0.85; % pg num needs to be in the normalized vertical range [0.8,1]
-footerArea = 0.8;
+pageNumHeightThresh = 0.01;
+footerArea = 0.9;
 %%
 
 for i = 1:outStruct.blockNum
@@ -19,6 +20,7 @@ for i = 1:outStruct.blockNum
         c(I) = nan;
         figL = [figBottom,min(c)];
         figR = [figBottom,max(c)];
+        closestInd = 0;
         % Search for the text box right below
         for j = figBottom+1:size(outStruct.labeledMask,1)
             currentRow = outStruct.labeledMask(j,figL(2):figR(2));
@@ -28,7 +30,11 @@ for i = 1:outStruct.blockNum
                 break;
             end
         end
-        outStruct.blockType{closestInd} = 'caption';
+        if closestInd
+            outStruct.blockType{closestInd} = 'caption';
+        else
+            disp('Erroneous Figure')
+        end
 %         fprintf('j = %d\n',closestInd)
 %         disp('@@@@@@@@CAPTION FOUND')
         continue;
@@ -43,6 +49,8 @@ for i = 1:outStruct.blockNum
         if ~isempty(outStruct.textLines{i})
             %% It can't be a page number if multiple textlines
              continue;
+        elseif (boundBox(2)-boundBox(1))/size(outStruct.labeledMask,1) > pageNumHeightThresh
+            continue;
         end
         lineBreakDist = boundBox(2)-boundBox(1);
         pageMiddle = size(outStruct.labeledMask,2)/2;

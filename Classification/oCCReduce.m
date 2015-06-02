@@ -21,7 +21,7 @@ function [reducedBoxTopLeft,...
 %   
 
 %% Constants
-figAreaThresh = 0.001; %CC bigger than 0.1% of image is probably an image
+figAreaThresh = 0.003; %CC bigger than 0.1% of image is probably an image
 
 %% First Dilate
 % CC = bwconncomp(~input_image,4);
@@ -65,8 +65,8 @@ for n = 1:CC.NumObjects
 end
 
 
-%% Downsample everything so that the largest dimension is around 800
-downFactor = max(1,floor(max(size(input_image))/800));
+%% Downsample everything so that the largest dimension is around 600
+downFactor = max(1,floor(max(size(input_image))/600));
 
 imBig = ~imdilate(~reducedBoxTopLeft,ones(downFactor));
 reducedBoxTopLeft = imBig(1:downFactor:end,1:downFactor:end);

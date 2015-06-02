@@ -33,9 +33,9 @@ for i = 1:blocks.NumObjects
         fprintf('component i = %d is too small\n',i)
         continue
     end
-    fprintf('@@@ i = %d\n',i)
-    %[blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw);
-    [blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw)
+    %fprintf('@@@ i = %d\n',i)
+    %[blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw,1);
+    [blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw);
     classStruct.blockNum = classStruct.blockNum + 1;
     classStruct.labeledMask(blocks.PixelIdxList{i}) = classStruct.blockNum;
     classStruct.blockType{end+1} = blockType;

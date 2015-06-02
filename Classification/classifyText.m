@@ -94,7 +94,7 @@ else
     validRange = validRange(find(hHistEnv,1,'first'):find(hHistEnv,1,'last'));
     hHist = hHist(find(hHistEnv,1,'first'):find(hHistEnv,1,'last'));
     Rh = xcorr(hHist-mean(hHist));
-    [~,loc] = findpeaks(Rh,'minpeakheight',max(Rh)/peakThreshFac,'minpeakdistance',low/2)
+    [~,loc] = findpeaks(Rh,'minpeakheight',max(Rh)/peakThreshFac,'minpeakdistance',low/2);
     if numel(loc) <= 3
         %% Need to think about this edge case (relies on aspect ratio)
         if height/width > outlierAspectRatioThresh || width/height > outlierAspectRatioThresh 

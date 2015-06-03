@@ -58,7 +58,12 @@ imReduced = ~boundingBox;
 A = [imReduced,ones(size(imReduced,1),1)];
 [row,col] = find(A);
 tic
-list = (MatlabComp.processImage(row,col,size(A,1))' - 1)*downFactor + 1;
+list = MatlabComp.processImage(row,col,size(A,1))';
+list([1,3],:) = (list([1,3],:)-1)*downFactor + 1;
+list([2,4],:) = list([2,4],:)*downFactor;
+list(2,list(2,:) > size(InputImgBin,1)-downFactor) = size(InputImgBin,1);
+list(4,list(4,:) > size(InputImgBin,2)-downFactor) = size(InputImgBin,2);
+
 fprintf('MWR time: %0.1fsec\n',toc);
 close all; %shouldn't be necessary
 cd ..

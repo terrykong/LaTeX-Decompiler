@@ -2,7 +2,7 @@
 %
 %   reducedBoxTopLeft (is downsampled by downFactor)
 %   reducedBoxTop     (is downsampled by downFactor)
-%   figmask              (= 1 for big bounding boxes (likely figures))
+%   figmask           (= 1 for big bounding boxes (likely figures))
 %                     (@ original resolution not downsampled))
 %   boundingBox       (is downsampled by downFactor)
 %   CCLoc             (corners of all bounding boxes, i.e. CC)
@@ -22,7 +22,7 @@ function [reducedBoxTopLeft,...
 
 %% Constants
 figAreaThresh = 0.003; %CC bigger than 0.1% of image is probably an image
-
+figAspectRatio = 5; % CC w/ aspect ratios bigger than this are not figs
 %% First Dilate
 % CC = bwconncomp(~input_image,4);
 % widths = zeros(1,CC.NumObjects);
@@ -57,7 +57,13 @@ for n = 1:CC.NumObjects
    % for filled rect: boundingBox(min(i):max(i),min(j):max(j)) = 0;
    if (CCLoc(n,2)-CCLoc(n,1))*(CCLoc(n,4)-CCLoc(n,3)) > ...
            figAreaThresh*(prod(size(input_image_dilate)))
-       figmask(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1):CCLoc(n,2)) = 1;
+       % check if the object has a reasonable figure aspect ratio
+       if (CCLoc(n,2)-CCLoc(n,1))/(CCLoc(n,4)-CCLoc(n,3)) > figAspectRatio || ...
+           (CCLoc(n,4)-CCLoc(n,3))/(CCLoc(n,2)-CCLoc(n,1)) > figAspectRatio
+           continue;
+       else   
+           figmask(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1):CCLoc(n,2)) = 1;
+       end
    end
    reducedBoxTopLeft(CCLoc(n,3),[CCLoc(n,1):CCLoc(n,2)]) = 0;
    reducedBoxTopLeft(CCLoc(n,3):CCLoc(n,4),CCLoc(n,1)) = 0;

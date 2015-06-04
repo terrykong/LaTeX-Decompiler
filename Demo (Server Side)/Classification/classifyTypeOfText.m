@@ -2,7 +2,7 @@ function outStruct = classifyTypeOfText(classStruct)
 % This will change 'text' blocks to 'captions', 'pagenumbers'
 outStruct = classStruct;
 %% Constants
-captionDistFac = 2;
+captionDistThresh = 0.03;
 pageNumDistFac = 5;
 pageNumVertFraction = 0.85; % pg num needs to be in the normalized vertical range [0.8,1]
 pageNumHeightThresh = 0.01;
@@ -17,7 +17,7 @@ for i = 1:outStruct.blockNum
         c = outStruct.pixelList{i}(:,2);
         figBottom = max(r);
         I = find(r ~= figBottom);
-        c(I) = nan;
+        %c(I) = nan;
         figL = [figBottom,min(c)];
         figR = [figBottom,max(c)];
         closestInd = 0;
@@ -31,7 +31,15 @@ for i = 1:outStruct.blockNum
             end
         end
         if closestInd
-            outStruct.blockType{closestInd} = 'caption';
+            % need to check if the block is close enough
+            if (closestInd - figBottom)/size(outStruct.labeledMask,1) > captionDistThresh
+                continue;
+            end
+            % Need to check if the block was text
+            if isequal(outStruct.blockType{closestInd},'text')
+                outStruct.blockType{closestInd} = 'caption';
+            end
+            
         else
             disp('Erroneous Figure')
         end

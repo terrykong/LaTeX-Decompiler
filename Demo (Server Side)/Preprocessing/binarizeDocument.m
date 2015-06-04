@@ -14,8 +14,8 @@ mean_all = mean(input_image(:));
 %% Locally Adaptive Thresholding
 [num_rows,num_cols] = size(input_image);
 % parameters for local binarization
-window_size = 64;
-step_size = 32; 
+window_size = 64*2;
+step_size = 32*2; 
 var_thresh = .4; %.2; %.02;
 num_tiles_row = floor(num_rows / step_size);
 num_tiles_col = floor(num_cols / step_size);

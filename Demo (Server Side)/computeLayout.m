@@ -18,6 +18,7 @@ if(isempty(output_img_path))
     output_img_path =('./output/test.jpg');
 end
 
+[~,im_name,~] = fileparts(input_img_path);
 % --------------------------------------------------------------------
 %                                                        Load an image
 % --------------------------------------------------------------------
@@ -32,6 +33,7 @@ InputImg = imrotate(imread(input_img_path),270);
 % --------------------------------------------------------------------
 cd Preprocessing/
 tic
+%InputImg = uint8(im2double(InputImg).^(2)*255); %This is a quick hack
 InputImgBin = preprocessDocument(InputImg);
 fprintf('Preprocessing time: %0.1fsec\n',toc);
 close all; %shouldn't be necessary
@@ -43,7 +45,7 @@ imshow(InputImgBin);
 box off; grid off; axis off;
 truesize(h, [size(InputImgBin,1) size(InputImgBin,2)]); %adjust figure
 set(gcf,'PaperPositionMode','auto')
-print(h,'-dpng','./output/preprocessed.png')
+print(h,'-dpng',sprintf('./output/preprocessed_%s.png',im_name))
 % --------------------------------------------------------------------
 %                                                                  MWR
 % --------------------------------------------------------------------
@@ -79,12 +81,12 @@ imshow(mask);
 box off; grid off; axis off;
 truesize(h, [size(mask,1) size(mask,2)]); %adjust figure
 set(gcf,'PaperPositionMode','auto')
-print(h,'-dpng','../output/mask.png')
+print(h,'-dpng',sprintf('../output/mask_%s.png',im_name))
 tic;
-[classStruct] = classification(InputImgBin,mask);
+[classStruct] = classification(InputImgBin,mask,figmask);
 fprintf('Classification time: %0.1fsec\n',toc);
 set(gcf,'PaperPositionMode','auto')
-print('-dpng','../output/classify.png')
+print('-dpng',sprintf('../output/classify_%s.png',im_name))
 cd ..
 
 %Construct output image 

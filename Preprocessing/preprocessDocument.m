@@ -15,7 +15,7 @@ function [ processed_image ] = preprocessDocument( input_image )
 input_image = rgb2gray(im2double(input_image));
 binarized_image = binarizeDocument(input_image);
 rotated_image = determineBlockSkew(binarized_image);
-processed_image = findPageMargins(rotated_image);
-
+%processed_image = findPageMargins(rotated_image);
+processed_image = findPageMarginsDemo(rotated_image);
 end
 

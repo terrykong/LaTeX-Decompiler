@@ -1,7 +1,8 @@
-function [blockType, textLines, classifyReason] = classifyText(CCpixels,im,plotFlag)
+function [blockType, textLines, classifyReason] = classifyText(CCpixels,im,figmask,plotFlag)
 % Input:
 %   - CCpixels = list of pixels for 1 connected component
 %   - im       = binary image
+%   - figmask  = figure mask (shouldn't be necessary but helps classify
 %
 % Output:
 %   - blocktype = string that identifies the pixel
@@ -12,16 +13,20 @@ function [blockType, textLines, classifyReason] = classifyText(CCpixels,im,plotF
 %                    - Horizontal histograms with periodic structure are
 %                       assumed to be text. 
 
-if nargin <= 2
+if nargin <= 3
     plotFlag = false;
+end
+
+if nargin <= 2
+    figmask = zeros(size(im));
 end
 
 %% Constants
 low = 10; %pixels
 peakThreshFac = 3;
-singleLineOfTextThresh = 2;
-outlierAspectRatioThresh = 8;
-modeSearchRadius = 2;
+singleLineOfTextThresh = 11;%16;
+outlierAspectRatioThresh = 6;
+modeSearchRadius = 10;
 passingRatio = 0.7; % if the weight is larger than this fraction of num of peaks
 gauss_sum = @(n) n*(n+1)/2;
 tinyTextAspectRatioThresh = 4;
@@ -32,11 +37,14 @@ oddShapedCCThresh = 0.9;
 % Calculate the two key numbers: height and width
 [h_full,w_full] = size(im); 
 [i,j] = ind2sub(size(im), CCpixels);
-height = max(i) - min(i);
-width = max(j) - min(j);
+boundBox = [min(i),max(i),min(j),max(j)];
+height = boundBox(2) - boundBox(1);
+width = boundBox(4) - boundBox(3);
+% height = max(i) - min(i);
+% width = max(j) - min(j);
 % Create mask
 mask = zeros(size(im));
-mask(CCpixels) = 1;
+mask(boundBox(1):boundBox(2),boundBox(3):boundBox(4)) = 1;
 % Create Horizontal histogram
 hHist = sum(mask.*im,2);
 % Trim histogram of leading and trialing zeros
@@ -68,6 +76,14 @@ if plotFlag
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Check if CCpixels are contained in the figmask. If so, it's likely a
+% figure
+if any(figmask(CCpixels))
+    blockType = 'figure';
+    classifyReason = 'found in figmask';
+    textLines = [];
+    return;
+end
 
 % Check if the height is above the "low" threshold
 if height < low

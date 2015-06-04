@@ -1,9 +1,10 @@
-function [classStruct] = classification(im_bw,mask)
+function [classStruct] = classification(im_bw,mask,figmask)
 % Function that classifies each CC in the mask 
 %
 % Input:
-%   - im_bw = binary image
-%   - mask  = cover mask
+%   - im_bw   = binary image
+%   - mask    = cover mask
+%   - figmask = figure mask (shouldn't be necessary, but helps classify)
 %
 % Output:
 %   - classStruct = class information
@@ -34,8 +35,8 @@ for i = 1:blocks.NumObjects
         continue
     end
     %fprintf('@@@ i = %d\n',i)
-    %[blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw,1);
-    [blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw);
+%    [blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw, figmask,1); disp(['blocknum ' num2str(classStruct.blockNum + 1)])
+    [blockType, textLines, classifyReason] = classifyText(blocks.PixelIdxList{i}, im_bw, figmask);
     classStruct.blockNum = classStruct.blockNum + 1;
     classStruct.labeledMask(blocks.PixelIdxList{i}) = classStruct.blockNum;
     classStruct.blockType{end+1} = blockType;

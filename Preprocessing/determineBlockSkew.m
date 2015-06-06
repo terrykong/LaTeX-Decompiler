@@ -1,12 +1,16 @@
 function [ output_im ] = determineBlockSkew( input_image )
-% Processes smaller blocks of the input image
-%   Returns data about variance, the hough transform theta peaks
+% Processes smaller blocks of the input image to determine direction of
+% text
+% Returns image rotated to correct angle
+  
 [num_rows, num_cols] = size(input_image);
 
 %% Find out where the image has high variance
 % and apply Hough ONLY there (to save time)
+
+% First go through image and determine the variance in different blocks of
+% the image
 var_win_size = 64; 
-win_ratio = 8; % better but slower 6
 num_windows_row = ceil(num_rows/var_win_size);
 num_windows_col = ceil(num_rows/var_win_size);
 var_map = zeros(num_windows_row,num_windows_col);
@@ -25,14 +29,18 @@ end
 % set a threshold for "high" variance
 var_map = var_map>.15*max(var_map(:));
 
+%% Apply Hough transform to high variance locations
+
+% apply to a larger window than we calculated variance for
+win_ratio = 8; 
 hough_win_size = var_win_size*win_ratio;
 num_hough_rows = floor(num_windows_row/win_ratio);
 num_hough_cols = floor(num_windows_col/win_ratio);
 thetaVec = -90:.5:89.5;
 hough_data = zeros(size(thetaVec));
-var_thresh = 0.01;
 for n = 1:num_hough_rows
     for m = 1:num_hough_cols
+        
         % If the current larger Hough block contains multiple high variance
         % blocks, find the Hough peaks
         high_var = sum(sum((var_map((n-1)*win_ratio+1:min(n*win_ratio,num_windows_row),...
@@ -48,11 +56,11 @@ for n = 1:num_hough_rows
             numPeaks = 30;
             thresh = 0.3*max(H(:));
             peaks = houghpeaks(H, numPeaks, 'Threshold', thresh);
-            lines = houghlines(~block,theta,rho,peaks,'FillGap',100,'MinLength',100);
             thetaHist = hist(theta(peaks(:,2)), thetaVec);
             hough_data = hough_data+thetaHist;
             
             %% Plotting - comment out to remove figures
+%             lines = houghlines(~block,theta,rho,peaks,'FillGap',100,'MinLength',100);
 %             figure
 %             subplot(211)
 %             imshow(block)
@@ -85,6 +93,7 @@ end
 % Plot sum of histograms
 % figure
 % plot(thetaVec,hough_data)
+
 % realize that we can also look at perpendicular lines, combine them 
 % eg combine 0 and -90, 30 and -60, etc
 hough_data_perp = hough_data(thetaVec<0)+hough_data(thetaVec>=0);
@@ -98,13 +107,16 @@ theta_perp = -44.5:.5:44.5;
 % find the theta that shows up the most (if there are multiple maximums,
 % find the median)
 max_index = hough_data_perp == max(hough_data_perp);
-theta_guess = median(theta_perp(max_index))
+theta_guess = median(theta_perp(max_index));
+% rotate image. also rotate the same size image of all ones to find where
+% imrotate adds pixels to the edges.
 original_image = zeros(size(input_image,1),size(input_image,2),2);
 original_image(:,:,1) = input_image;
 original_image(:,:,2) = ones(size(input_image));
 rotated_im = imrotate(original_image,theta_guess,'bilinear');
 output_im = rotated_im(:,:,1);
-% make new pixels from imrotate black
+
+% make new border pixels from imrotate black
 output_im(rotated_im(:,:,2)==0) = 1;
 % figure
 % imshow(output_im);

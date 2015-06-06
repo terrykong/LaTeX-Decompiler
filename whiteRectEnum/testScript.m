@@ -26,12 +26,12 @@ toc
 % imagesc(A,[0 1]); axis('image'); colorbar;
 % 
 B = im*0.5+0.5;
-for rect = list
-    B = im*0.5+0.5;
+for i = 1:floor(size(list,2)/100)
+    rect = list(:,i);
     B(rect(1):rect(2),rect(3):rect(4)) = 0;
     imagesc(B,[0 1]); axis('image'); colorbar;
-    rect
-    input('')
+%     rect
+%     input('')
 end
 % 
-% imagesc(B,[0 1]); axis('image'); colorbar;
+imshow(B)

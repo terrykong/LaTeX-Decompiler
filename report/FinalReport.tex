@@ -245,7 +245,7 @@ and logical connections, which is done in the following steps of the project.
 Once the maximal white rectangles have been calculated, a subset of the largest rectangles can be used as partial covers to segment content in the document. The union of these partial covers creates a mask for the document where connected components in the mask are blocks of content. It is crucial that the chosen subset of partial covers correctly separates different types of content; otherwise the classification will be meaningless.
 
 \subsection{Assumptions} 
-There are many types of document layouts that each have different conventions for things such as caption position or footer extent. This required us to limit the scope of document layouts the algorithm may accept in order to guarantee reliable classification. Academic papers and textbook pages tend to follow the conventions that we aim to cover, but more generally, any document that follows these set of rules should be correctly decomposed and classified:
+There are many types of document layouts that each have different conventions for properties such as caption position or footer extent. This required us to limit the scope of document layouts the algorithm may accept in order to guarantee reliable classification. Academic papers and textbook pages tend to follow the conventions that we aim to cover, but more generally, any document that follows these set of rules should be correctly decomposed and classified:
 
 \begin{itemize}
 \item The document should be in Manhattan Layout, but in general, any one type of content in the document must have a rectangle that circumscribes only that content and no other type of content.
@@ -367,7 +367,7 @@ The rules that were implemented in this project were:
 \item Page numbers are "small" blocks of text that are centered with respect to the entire page and must be below a certain point on a page. The fact that they are "small" blocks prevents misclassification of a footer.
 \end{itemize}
 
-Footers were not classified since they are usually separated from text by a horizontal line. If the skew of the binary document is incorrect, without OCR this horizontal line will not be distinguishable from text using only a horizontal or vertical projection.
+Footers were not classified since they are usually separated from text by a horizontal line. If the skew of the binary document is incorrect, without OCR, this horizontal line will not be distinguishable from text using only a horizontal or vertical projection.
 
 \chapter{Results}
 Since the image pipeline involves executing Matlab code, it was a logical choice to run the image processing off the device. With the current implementation in Java and Matlab running on a 2.3 GHz Intel Code i7, a typical picture of a document taken on an 8MP camera takes approximately 25 seconds to process. The results of 73 pictures of documents conforming to the IEEE conference format are compiled below in Figure \ref{accuracy}. \footnote{Paragraphs were considered as one block and if all lines of text within a paragraph were classified as text, the paragraph was considered correctly classified.} The numbers on top of each bar are the number of document,s out of 73, that contained that content type.
